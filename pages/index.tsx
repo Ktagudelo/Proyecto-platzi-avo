@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import fetch from 'isomorphic-unfetch';
 import Layout from '@components/Layout/Layout'
 import KawaiiHeader from '@components/KawaiiHeader/KawaiiHeader'
 import ProductList from '@components/ProductList/ProductList'
 
-export const getServerSideProps = async () => {
-  const response = await fetch('https://platzi-avo.vercel.app/yes-or-no')
-    const {data: productList}: TAPIAvoResponse = await response.json()
+const HomePage = () => {
+  const [productList, setProductList] = useState<TProduct[]>([])
 
-  return {
-    props: {
-      productList,
-    }
-  }
-}
+  useEffect(() => {
+    window
+      .fetch('/api/avo')
+      .then((response) => response.json())
+      .then(({ data }: TAPIAvoResponse) => {
+        setProductList(data)
+      })
+  }, [])
 
-const HomePage = ({ productList }: { productList: TProduct[] }) => {
   return (
     <Layout>
       <KawaiiHeader />
